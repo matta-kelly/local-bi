@@ -1,0 +1,20 @@
+[project]
+name = "bi"
+version = "0.1.0"
+dependencies = [
+    "pandas",
+    "numpy",
+    "holidays",
+    "requests",
+    "python-dotenv",
+    "psycopg2-binary",
+    "klaviyo-api",
+    "pyarrow",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]

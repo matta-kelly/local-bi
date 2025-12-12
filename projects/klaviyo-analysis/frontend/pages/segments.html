@@ -1,0 +1,19 @@
+<header class="page-header">
+    <h1>Segment Performance</h1>
+    <p>Aggregate metrics by segment</p>
+</header>
+
+<section class="filters">
+    <input type="date" id="date-start">
+    <input type="date" id="date-end">
+    <label>
+        Min Sends: <input type="number" id="min-sends" value="0" min="0" step="1000">
+    </label>
+    <button id="apply-filters">Apply</button>
+</section>
+
+<section class="content">
+    <div id="segments-table">
+        <p class="loading">Loading segments...</p>
+    </div>
+</section>

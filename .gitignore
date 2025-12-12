@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+*.egg-info/
+processed-data/
+data_output/
+
+
+# Data
+*.parquet
+*.csv
+*.xlsx
+
+# ignore specific folders across all projects
+**/input-data/
+**/output-data/
+**/featured-data/
+**/data/

@@ -1,0 +1,112 @@
+.
+├── bi.egg-info
+│   ├── dependency_links.txt
+│   ├── PKG-INFO
+│   ├── requires.txt
+│   ├── SOURCES.txt
+│   └── top_level.txt
+├── connections
+│   ├── __init__.py
+│   ├── klaviyo
+│   │   ├── __init__.py
+│   │   ├── profiles.py
+│   │   └── segments.py
+│   ├── landl_db
+│   │   ├── customers.py
+│   │   ├── __init__.py
+│   │   ├── listings.py
+│   │   ├── order_lines.py
+│   │   ├── orders.py
+│   │   └── variants.py
+│   ├── processing.py
+│   └── schemas.py
+├── .env
+├── .gitignore
+├── klaviyo-analysis
+│   ├── extract-all.py
+│   ├── featured-data
+│   │   ├── f_customers.parquet
+│   │   ├── f_orders.parquet
+│   │   ├── f_segments.parquet
+│   │   └── segment_bfcm_only.parquet
+│   ├── frontend
+│   │   ├── data
+│   │   │   ├── campaigns.parquet
+│   │   │   ├── customers.parquet
+│   │   │   ├── f_customers.parquet
+│   │   │   ├── f_orders.parquet
+│   │   │   ├── f_segments.parquet
+│   │   │   ├── order_lines.parquet
+│   │   │   ├── orders.parquet
+│   │   │   ├── profiles.parquet
+│   │   │   ├── segment_bfcm_only copy.parquet
+│   │   │   ├── segment_bfcm_only.parquet
+│   │   │   ├── segment_membership.parquet
+│   │   │   ├── segments.parquet
+│   │   │   ├── shopify_customers.parquet
+│   │   │   ├── shopify_listings.parquet
+│   │   │   └── variants.parquet
+│   │   ├── index.html
+│   │   ├── js
+│   │   │   ├── app.js
+│   │   │   ├── db.js
+│   │   │   └── router.js
+│   │   ├── pages
+│   │   │   ├── campaigns.html
+│   │   │   ├── sale-segment.html
+│   │   │   └── segments.html
+│   │   ├── services
+│   │   │   ├── campaigns.js
+│   │   │   └── segments.js
+│   │   └── style.css
+│   ├── input-data
+│   │   ├── shopify_customers.parquet
+│   │   ├── shopify_listings.parquet
+│   │   ├── shopify_order_lines.parquet
+│   │   ├── shopify_orders.parquet
+│   │   └── shopify_variants.parquet
+│   └── scripts
+│       ├── build_customers.py
+│       ├── create-sales-segment.py
+│       ├── feature_customers.py
+│       ├── feature_orders.py
+│       └── feature_segements.py
+├── merchandising-analysis
+│   ├── data_output
+│   │   ├── best-sellers_products.csv
+│   │   ├── harem-pants_products.csv
+│   │   ├── holiday-gift-guide-2025_products.csv
+│   │   ├── listing_sales.csv
+│   │   ├── master-healer_products.csv
+│   │   ├── new-arrivals_products.csv
+│   │   └── variant_sales.csv
+│   ├── extract-colleciton-products.py
+│   ├── master-sku.csv
+│   ├── parent-listing-map.csv
+│   ├── prep_sales.py
+│   ├── sales_data.csv
+│   ├── weeks-of-sale.csv
+│   └── weeks-of-sale.xlsx
+├── pyproject.toml
+└── random-reports
+    ├── ad_hoc
+    │   ├── 10-3-searchspring_analysis.html
+    │   ├── abnormal_conversion_9_17_2025.html
+    │   └── session_duration.html
+    ├── index.html
+    ├── input
+    │   ├── 10-26-11-2-MK_ Weekly-Report_ Site-Totals-and-Efficiency-Metrics.csv
+    │   ├── Recommendations_Profiles_Summary.csv
+    │   ├── searchspring_profiles_processed.csv
+    │   ├── searchspring_shopify_merged.csv
+    │   ├── Sessions over time.csv
+    │   ├── shopify_sessions_processed.csv
+    │   └── ytd_session_duration.csv
+    ├── README.md
+    ├── styles.css
+    ├── weekly_reports
+    │   └── 2025-10-27_to_11-02.html
+    ├── weekly-template.html
+    └── weekly-template.js
+
+20 directories, 90 files
