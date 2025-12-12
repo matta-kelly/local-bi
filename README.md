@@ -88,4 +88,4 @@ df = master_sku.get_master_sku()
 
 1. Create folder in `projects/`
 2. Add `extract.py` that imports from `connections/` and writes to `input-data/`
-3. Add scripts that read from `input-data/` and write to `featured-data/` or `output/`
+3. Add scripts that read from `input-data/` and write to `featured-data/` or `output/`git a
