@@ -162,4 +162,12 @@ SCHEMAS = {
         "compare_at_price": "float",
         "available": "string",
     },
+    "stock_daily": {
+    "internal_reference": "string",
+    "snapshot_date": "datetime",
+    "in_stock": "string",
+    "free_qty": "float",
+    "outgoing_qty": "float",
+    "incoming_qty": "float",
+},
 }
