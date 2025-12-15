@@ -3,17 +3,11 @@ from datetime import datetime, timedelta
 from connections.searchspring import collections
 from connections.local import master_sku
 from connections.landl_db import variants, listings, order_lines, orders, stock_daily
+from config import COLLECTIONS, MIN_CURRENT_QTY, LOW_STOCK_WEEKS
 
 
 OUTPUT_DIR = "projects/merchandising-analysis/data"
 SINCE = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
-COLLECTIONS = [
-    "best-sellers",
-    "new-arrivals",
-    "harem-pants",
-    "master-healer",
-    "holiday-gift-guide-2025",
-]
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 

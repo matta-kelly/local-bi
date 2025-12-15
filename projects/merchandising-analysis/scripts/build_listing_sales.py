@@ -67,7 +67,7 @@ def build_listing_sales():
     # Join listing details
     print("Joining listing details...")
     listing_sales = listing_sales.merge(
-        listings[["product_id", "title", "product_type"]],
+        listings[["product_id", "title", "product_type", "published_at"]],
         on="product_id",
         how="left"
     )
