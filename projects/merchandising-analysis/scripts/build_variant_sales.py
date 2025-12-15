@@ -66,6 +66,14 @@ def build_variant_sales():
         (variant_sales["compare_at_price"] - variant_sales["price"]) / variant_sales["compare_at_price"]
     ).fillna(0).clip(lower=0)
     
+    # Get current qty (latest snapshot)
+    print("Getting current stock levels...")
+    latest_date = stock_daily["snapshot_date"].max()
+    current_stock = stock_daily[stock_daily["snapshot_date"] == latest_date][["internal_reference", "free_qty"]].copy()
+    current_stock = current_stock.rename(columns={"internal_reference": "sku", "free_qty": "current_qty"})
+    variant_sales = variant_sales.merge(current_stock, on="sku", how="left")
+    variant_sales["current_qty"] = variant_sales["current_qty"].fillna(0)
+    
     # Aggregate sales and stock for each time window
     for window_name, (cutoff_date, num_days) in windows.items():
         print(f"Aggregating {window_name} sales...")
@@ -101,7 +109,7 @@ def build_variant_sales():
         window_stock = stock_daily[stock_mask]
         
         stock_agg = window_stock.groupby("internal_reference").agg(
-            days_in_stock=("in_stock", lambda x: (x == True).sum() if x.dtype == bool else (x == "true").sum()),
+            days_in_stock=("in_stock", lambda x: (x == True).sum() if x.dtype == bool else (x.str.lower() == "true").sum()),
             avg_free_qty=("free_qty", "mean"),
         ).reset_index().rename(columns={"internal_reference": "sku"})
         
@@ -117,6 +125,13 @@ def build_variant_sales():
         variant_sales[f"rate_of_sale_{window_name}"] = (
             variant_sales[f"units_sold_{window_name}"] / variant_sales[f"days_in_stock_{window_name}"]
         ).replace([float("inf"), -float("inf")], 0).fillna(0)
+    
+    # Calculate weeks of sale (using 30d ROS)
+    print("Calculating weeks of sale...")
+    weekly_burn = variant_sales["rate_of_sale_30d"] * 7
+    variant_sales["weeks_of_sale"] = (
+        variant_sales["current_qty"] / weekly_burn
+    ).replace([float("inf"), -float("inf")], 9999).fillna(0)
     
     # Fill NaN sales metrics with 0
     sales_cols = [c for c in variant_sales.columns if any(x in c for x in ["units_sold", "revenue", "order_count", "days_in_stock", "avg_free_qty"])]
