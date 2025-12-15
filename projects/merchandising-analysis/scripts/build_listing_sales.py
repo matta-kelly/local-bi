@@ -20,9 +20,12 @@ def build_listing_sales():
     # Build aggregation dict
     agg_dict = {
         "sku": "count",  # variant_count
+        "category_group": "first",
         "price": "mean",
         "compare_at_price": "mean",
         "markdown_pct": "mean",
+        "unit_cost": "mean",
+        "margin_pct": "mean",
         "current_qty": "sum",
     }
     
@@ -73,13 +76,13 @@ def build_listing_sales():
     )
     
     # Reorder columns
-    id_cols = ["product_id", "title", "product_type", "variant_count"]
+    id_cols = ["product_id", "title", "product_type", "category_group", "variant_count"]
     other_cols = [c for c in listing_sales.columns if c not in id_cols]
     listing_sales = listing_sales[id_cols + other_cols]
     
     # Save
     listing_sales.to_parquet(f"{OUTPUT_DIR}/listing_sales.parquet", index=False)
-    listing_sales.to_csv(f"{OUTPUT_DIR}/listing_sales.csv", index=False)
+    #listing_sales.to_csv(f"{OUTPUT_DIR}/listing_sales.csv", index=False)
     print(f"✓ Saved listing_sales.parquet and listing_sales.csv ({len(listing_sales)} rows)")
     
     print(f"\nColumns: {listing_sales.columns.tolist()}")

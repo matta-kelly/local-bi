@@ -23,7 +23,7 @@ def build_collection_analysis():
         
         # Join to listing_sales on name = title
         merged = collection_df.merge(
-            listings[["title", "units_sold_30d", "revenue_30d", "rate_of_sale_30d", "rate_of_sale_7d", "markdown_pct", "weeks_of_sale", "published_at"]],
+            listings[["title", "units_sold_30d", "revenue_30d", "rate_of_sale_30d", "rate_of_sale_7d", "markdown_pct", "margin_pct", "weeks_of_sale", "published_at"]],
             left_on="name",
             right_on="title",
             how="left"
@@ -47,13 +47,14 @@ def build_collection_analysis():
             "rate_of_sale_30d",
             "velocity_trend",
             "markdown_pct",
+            "margin_pct",
             "weeks_of_sale",
             "low_stock"
         ]]
         
         # Save
         output.to_parquet(f"{OUTPUT_DIR}/{collection}_analysis.parquet", index=False)
-        output.to_csv(f"{OUTPUT_DIR}/{collection}_analysis.csv", index=False)
+        #output.to_csv(f"{OUTPUT_DIR}/{collection}_analysis.csv", index=False)
         print(f"  ✓ Saved {collection}_analysis.parquet ({len(output)} rows)")
         
         # Show match rate

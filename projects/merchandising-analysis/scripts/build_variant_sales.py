@@ -45,10 +45,10 @@ def build_variant_sales():
     print("Building variant base...")
     variant_sales = variants[["variant_id", "product_id", "sku", "price", "compare_at_price"]].copy()
     
-    # Join master_sku to get EC price for missing compare_at_price
-    print("Joining master_sku for EC price...")
+    # Join master_sku to get EC price, unit_cost, and category_group
+    print("Joining master_sku for EC price, unit_cost, and category_group...")
     variant_sales = variant_sales.merge(
-        master_sku[["sku", "ec"]],
+        master_sku[["sku", "ec", "unit_cost", "category_group"]],
         on="sku",
         how="left"
     )
@@ -64,6 +64,11 @@ def build_variant_sales():
     # Calculate markdown %
     variant_sales["markdown_pct"] = (
         (variant_sales["compare_at_price"] - variant_sales["price"]) / variant_sales["compare_at_price"]
+    ).fillna(0).clip(lower=0)
+    
+    # Calculate margin %
+    variant_sales["margin_pct"] = (
+        (variant_sales["price"] - variant_sales["unit_cost"]) / variant_sales["price"]
     ).fillna(0).clip(lower=0)
     
     # Get current qty (latest snapshot)

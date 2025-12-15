@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Merchandising Report - {{ report_date }}</title>
+    <style>
+        {% include 'styles.css' %}
+    </style>
+</head>
+<body>
+    <h1>Merchandising Report</h1>
+    <p>Generated: {{ report_datetime }}</p>
+    <p>Period: Last 30 days</p>
+    
+    <!-- Category Group Summary -->
+    <h2>Category Group Summary</h2>
+    <div>
+        {% for group in category_summary %}
+        <div class="metric-box">
+            <div class="metric-value">{{ "%.1f"|format(group.pct_revenue) }}%</div>
+            <div class="metric-label">{{ group.category_group or 'Unknown' }}</div>
+            <div class="metric-label">${{ "{:,.0f}".format(group.revenue_30d) }}</div>
+            <div class="metric-label">{{ "{:,.0f}".format(group.units_sold_30d) }} units</div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Type Breakdown -->
+    <h2>Type Breakdown by Category Group</h2>
+    {% for group_name, types in type_breakdown.items() %}
+    <h3>{{ group_name }}</h3>
+    <table>
+        <tr>
+            <th>Product Type</th>
+            <th>Revenue (30d)</th>
+            <th>% of {{ group_name }}</th>
+            <th>% of Total</th>
+            <th>Units Sold (30d)</th>
+        </tr>
+        {% for t in types %}
+        <tr>
+            <td>{{ t.product_type }}</td>
+            <td>${{ "{:,.0f}".format(t.revenue_30d) }}</td>
+            <td>{{ "%.1f"|format(t.pct_of_group) }}%</td>
+            <td>{{ "%.1f"|format(t.pct_of_total) }}%</td>
+            <td>{{ "{:,.0f}".format(t.units_sold_30d) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endfor %}
+    
+    <!-- Collection Analysis -->
+    <h2>Collection Analysis</h2>
+    {% for coll in collections %}
+    <div class="collection-section">
+        <h3 class="collection-title">{{ coll.name }}</h3>
+        <p class="match-rate">{{ coll.matched }} / {{ coll.total }} products matched ({{ "%.1f"|format(coll.match_rate) }}%) · Showing top 50{% if coll.has_buried %} + {{ coll.buried_data|length }} buried performers{% endif %}</p>
+        <table>
+            <tr>
+                <th>Pos</th>
+                <th>Name</th>
+                <th>Published</th>
+                <th>Units (30d)</th>
+                <th>Revenue (30d)</th>
+                <th>ROS</th>
+                <th>Velocity</th>
+                <th>MD %</th>
+                <th>Margin %</th>
+                <th>Weeks of Sale</th>
+                <th>Low Stock</th>
+            </tr>
+            {% for row in coll.top_data %}
+            <tr class="{{ 'low-stock' if row.low_stock == 1 else '' }}">
+                <td>{{ row.position }}</td>
+                <td>{{ row.name }}</td>
+                <td>{{ row.published_at or '' }}</td>
+                <td>{{ "{:,.0f}".format(row.units_sold_30d or 0) }}</td>
+                <td style="background: {{ row.revenue_color }};">${{ "{:,.0f}".format(row.revenue_30d or 0) }}</td>
+                <td style="background: {{ row.ros_color }};">{{ "%.2f"|format(row.rate_of_sale_30d or 0) }}</td>
+                <td style="background: {{ row.velocity_color }};">{{ "%.2f"|format(row.velocity_trend or 0) }}</td>
+                <td style="background: {{ row.markdown_color }};">{{ "%.0f"|format((row.markdown_pct or 0) * 100) }}%</td>
+                {% if (row.margin_pct or 0) == 0 %}
+                <td class="neutral">N/A</td>
+                {% else %}
+                <td style="background: {{ row.margin_color }};">{{ "%.0f"|format(row.margin_pct * 100) }}%</td>
+                {% endif %}
+                <td>{{ "%.1f"|format(row.weeks_of_sale or 0) }}</td>
+                <td>{{ "⚠️" if row.low_stock == 1 else "✓" }}</td>
+            </tr>
+            {% endfor %}
+            
+            {% if coll.has_buried %}
+            <!-- Separator Row -->
+            <tr class="separator-row">
+                <td colspan="11">
+                    <span class="separator-dots">⋯</span>
+                    <span class="separator-label">{{ coll.buried_count }} more items · Top {{ coll.buried_data|length }} by revenue shown below</span>
+                    <span class="separator-dots">⋯</span>
+                </td>
+            </tr>
+            
+            <!-- Buried Performers -->
+            {% for row in coll.buried_data %}
+            <tr class="buried-row {{ 'low-stock' if row.low_stock == 1 else '' }}">
+                <td>{{ row.position }}</td>
+                <td>{{ row.name }}</td>
+                <td>{{ row.published_at or '' }}</td>
+                <td>{{ "{:,.0f}".format(row.units_sold_30d or 0) }}</td>
+                <td style="background: {{ row.revenue_color }};">${{ "{:,.0f}".format(row.revenue_30d or 0) }}</td>
+                <td style="background: {{ row.ros_color }};">{{ "%.2f"|format(row.rate_of_sale_30d or 0) }}</td>
+                <td style="background: {{ row.velocity_color }};">{{ "%.2f"|format(row.velocity_trend or 0) }}</td>
+                <td style="background: {{ row.markdown_color }};">{{ "%.0f"|format((row.markdown_pct or 0) * 100) }}%</td>
+                {% if (row.margin_pct or 0) == 0 %}
+                <td class="neutral">N/A</td>
+                {% else %}
+                <td style="background: {{ row.margin_color }};">{{ "%.0f"|format(row.margin_pct * 100) }}%</td>
+                {% endif %}
+                <td>{{ "%.1f"|format(row.weeks_of_sale or 0) }}</td>
+                <td>{{ "⚠️" if row.low_stock == 1 else "✓" }}</td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+        </table>
+    </div>
+    {% endfor %}
+    
+</body>
+</html>
