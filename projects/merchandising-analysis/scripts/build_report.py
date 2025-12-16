@@ -7,7 +7,7 @@ sys.path.insert(0, "projects/merchandising-analysis")
 from config import COLLECTIONS
 
 INPUT_DIR = "projects/merchandising-analysis/data"
-OUTPUT_DIR = "projects/merchandising-analysis/data"
+OUTPUT_DIR = "projects/merchandising-analysis"
 TEMPLATE_DIR = "projects/merchandising-analysis/templates"
 
 CATEGORY_GROUPS = ["CLOTHING", "JEWELRY"]
@@ -105,26 +105,36 @@ def calc_percentile_ranks(df):
     
     # Revenue rank (higher = better)
     df["revenue_rank"] = df["revenue_30d"].rank(pct=True, na_option="bottom").fillna(0)
-    df["revenue_color"] = df["revenue_rank"].apply(lambda x: rank_to_color(x))
+    df["revenue_color"] = df.apply(
+        lambda r: "transparent" if pd.isna(r["revenue_30d"]) else rank_to_color(r["revenue_rank"]), axis=1
+    )
     
     # ROS rank (higher = better)
     df["ros_rank"] = df["rate_of_sale_30d"].rank(pct=True, na_option="bottom").fillna(0)
-    df["ros_color"] = df["ros_rank"].apply(lambda x: rank_to_color(x))
+    df["ros_color"] = df.apply(
+        lambda r: "transparent" if pd.isna(r["rate_of_sale_30d"]) else rank_to_color(r["ros_rank"]), axis=1
+    )
     
     # Velocity rank (higher = better, heating up)
     df["velocity_rank"] = df["velocity_trend"].rank(pct=True, na_option="bottom").fillna(0)
-    df["velocity_color"] = df["velocity_rank"].apply(lambda x: rank_to_color(x))
+    df["velocity_color"] = df.apply(
+        lambda r: "transparent" if pd.isna(r["velocity_trend"]) else rank_to_color(r["velocity_rank"]), axis=1
+    )
     
     # Markdown rank (lower = better, so invert)
     df["markdown_rank"] = df["markdown_pct"].rank(pct=True, na_option="bottom").fillna(0)
-    df["markdown_color"] = df["markdown_rank"].apply(lambda x: rank_to_color(x, invert=True))
+    df["markdown_color"] = df.apply(
+        lambda r: "transparent" if pd.isna(r["markdown_pct"]) else rank_to_color(r["markdown_rank"], invert=True), axis=1
+    )
     
     # Margin rank (higher = better, handle zeros as N/A)
     margin_valid = df["margin_pct"] > 0
     df["margin_rank"] = 0.5
     if margin_valid.any():
         df.loc[margin_valid, "margin_rank"] = df.loc[margin_valid, "margin_pct"].rank(pct=True).fillna(0.5)
-    df["margin_color"] = df["margin_rank"].apply(lambda x: rank_to_color(x))
+    df["margin_color"] = df.apply(
+        lambda r: "transparent" if pd.isna(r["margin_pct"]) or r["margin_pct"] == 0 else rank_to_color(r["margin_rank"]), axis=1
+    )
     
     return df
 

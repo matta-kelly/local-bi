@@ -17,96 +17,131 @@
 │   │   ├── listings.py
 │   │   ├── order_lines.py
 │   │   ├── orders.py
+│   │   ├── stock_daily.py
 │   │   └── variants.py
+│   ├── local
+│   │   ├── master-sku.csv
+│   │   └── master_sku.py
 │   ├── processing.py
-│   └── schemas.py
+│   ├── schemas.py
+│   └── searchspring
+│       ├── collections.py
+│       └── __init__.py
 ├── .env
 ├── .gitignore
-├── klaviyo-analysis
-│   ├── extract-all.py
-│   ├── featured-data
-│   │   ├── f_customers.parquet
-│   │   ├── f_orders.parquet
-│   │   ├── f_segments.parquet
-│   │   └── segment_bfcm_only.parquet
-│   ├── frontend
-│   │   ├── data
-│   │   │   ├── campaigns.parquet
-│   │   │   ├── customers.parquet
+├── projects
+│   ├── klaviyo-analysis
+│   │   ├── extract-all.py
+│   │   ├── featured-data
 │   │   │   ├── f_customers.parquet
-│   │   │   ├── f_orders.parquet
-│   │   │   ├── f_segments.parquet
-│   │   │   ├── order_lines.parquet
-│   │   │   ├── orders.parquet
-│   │   │   ├── profiles.parquet
-│   │   │   ├── segment_bfcm_only copy.parquet
-│   │   │   ├── segment_bfcm_only.parquet
-│   │   │   ├── segment_membership.parquet
-│   │   │   ├── segments.parquet
+│   │   │   └── f_orders.parquet
+│   │   ├── frontend
+│   │   │   ├── data
+│   │   │   │   ├── campaigns.parquet
+│   │   │   │   ├── customers.parquet
+│   │   │   │   ├── f_customers.parquet
+│   │   │   │   ├── f_orders.parquet
+│   │   │   │   ├── f_segments.parquet
+│   │   │   │   ├── order_lines.parquet
+│   │   │   │   ├── orders.parquet
+│   │   │   │   ├── profiles.parquet
+│   │   │   │   ├── segment_bfcm_only copy.parquet
+│   │   │   │   ├── segment_bfcm_only.parquet
+│   │   │   │   ├── segment_membership.parquet
+│   │   │   │   ├── segments.parquet
+│   │   │   │   ├── shopify_customers.parquet
+│   │   │   │   ├── shopify_listings.parquet
+│   │   │   │   └── variants.parquet
+│   │   │   ├── index.html
+│   │   │   ├── js
+│   │   │   │   ├── app.js
+│   │   │   │   ├── db.js
+│   │   │   │   └── router.js
+│   │   │   ├── pages
+│   │   │   │   ├── campaigns.html
+│   │   │   │   ├── sale-segment.html
+│   │   │   │   └── segments.html
+│   │   │   ├── services
+│   │   │   │   ├── campaigns.js
+│   │   │   │   └── segments.js
+│   │   │   └── style.css
+│   │   ├── input-data
+│   │   │   ├── customers.parquet
+│   │   │   ├── klaviyo_profiles.parquet
+│   │   │   ├── klaviyo_segment_membership.parquet
+│   │   │   ├── klaviyo_segments.parquet
 │   │   │   ├── shopify_customers.parquet
 │   │   │   ├── shopify_listings.parquet
-│   │   │   └── variants.parquet
-│   │   ├── index.html
-│   │   ├── js
-│   │   │   ├── app.js
-│   │   │   ├── db.js
-│   │   │   └── router.js
-│   │   ├── pages
-│   │   │   ├── campaigns.html
-│   │   │   ├── sale-segment.html
-│   │   │   └── segments.html
-│   │   ├── services
-│   │   │   ├── campaigns.js
-│   │   │   └── segments.js
-│   │   └── style.css
-│   ├── input-data
-│   │   ├── shopify_customers.parquet
-│   │   ├── shopify_listings.parquet
-│   │   ├── shopify_order_lines.parquet
-│   │   ├── shopify_orders.parquet
-│   │   └── shopify_variants.parquet
-│   └── scripts
-│       ├── build_customers.py
-│       ├── create-sales-segment.py
-│       ├── feature_customers.py
-│       ├── feature_orders.py
-│       └── feature_segements.py
-├── merchandising-analysis
-│   ├── data_output
-│   │   ├── best-sellers_products.csv
-│   │   ├── harem-pants_products.csv
-│   │   ├── holiday-gift-guide-2025_products.csv
-│   │   ├── listing_sales.csv
-│   │   ├── master-healer_products.csv
-│   │   ├── new-arrivals_products.csv
-│   │   └── variant_sales.csv
-│   ├── extract-colleciton-products.py
-│   ├── master-sku.csv
-│   ├── parent-listing-map.csv
-│   ├── prep_sales.py
-│   ├── sales_data.csv
-│   ├── weeks-of-sale.csv
-│   └── weeks-of-sale.xlsx
+│   │   │   ├── shopify_order_lines.parquet
+│   │   │   ├── shopify_orders.parquet
+│   │   │   └── shopify_variants.parquet
+│   │   └── scripts
+│   │       ├── build_customers.py
+│   │       ├── create-sales-segment.py
+│   │       ├── feature_customers.py
+│   │       ├── feature_orders.py
+│   │       └── feature_segements.py
+│   ├── merchandising-analysis
+│   │   ├── config.py
+│   │   ├── data
+│   │   │   ├── best-sellers_analysis.parquet
+│   │   │   ├── best-sellers_products.parquet
+│   │   │   ├── harem-pants_analysis.parquet
+│   │   │   ├── harem-pants_products.parquet
+│   │   │   ├── holiday-gift-guide-2025_analysis.parquet
+│   │   │   ├── holiday-gift-guide-2025_products.parquet
+│   │   │   ├── listing_sales.parquet
+│   │   │   ├── master-healer_analysis.parquet
+│   │   │   ├── master-healer_products.parquet
+│   │   │   ├── master_sku.parquet
+│   │   │   ├── merchandising_report.html
+│   │   │   ├── new-arrivals_analysis.parquet
+│   │   │   ├── new-arrivals_products.parquet
+│   │   │   ├── shopify_listings.parquet
+│   │   │   ├── shopify_order_lines.parquet
+│   │   │   ├── shopify_orders.parquet
+│   │   │   ├── shopify_variants.parquet
+│   │   │   ├── stock_daily.parquet
+│   │   │   ├── summary_by_category.csv
+│   │   │   ├── summary_by_category_group.csv
+│   │   │   ├── summary_by_category_group.parquet
+│   │   │   ├── summary_by_category.parquet
+│   │   │   ├── summary_by_markdown.csv
+│   │   │   ├── summary_by_markdown.parquet
+│   │   │   ├── summary_by_type.csv
+│   │   │   ├── summary_by_type.parquet
+│   │   │   └── variant_sales.parquet
+│   │   ├── extract.py
+│   │   ├── scripts
+│   │   │   ├── build_collection_analysis.py
+│   │   │   ├── build_listing_sales.py
+│   │   │   ├── build_report.py
+│   │   │   ├── build_summary_stats.py
+│   │   │   └── build_variant_sales.py
+│   │   └── templates
+│   │       ├── report.html
+│   │       └── styles.css
+│   └── random-reports
+│       ├── ad_hoc
+│       │   ├── 10-3-searchspring_analysis.html
+│       │   ├── abnormal_conversion_9_17_2025.html
+│       │   └── session_duration.html
+│       ├── index.html
+│       ├── input
+│       │   ├── 10-26-11-2-MK_ Weekly-Report_ Site-Totals-and-Efficiency-Metrics.csv
+│       │   ├── Recommendations_Profiles_Summary.csv
+│       │   ├── searchspring_profiles_processed.csv
+│       │   ├── searchspring_shopify_merged.csv
+│       │   ├── Sessions over time.csv
+│       │   ├── shopify_sessions_processed.csv
+│       │   └── ytd_session_duration.csv
+│       ├── README.md
+│       ├── styles.css
+│       ├── weekly_reports
+│       │   └── 2025-10-27_to_11-02.html
+│       ├── weekly-template.html
+│       └── weekly-template.js
 ├── pyproject.toml
-└── random-reports
-    ├── ad_hoc
-    │   ├── 10-3-searchspring_analysis.html
-    │   ├── abnormal_conversion_9_17_2025.html
-    │   └── session_duration.html
-    ├── index.html
-    ├── input
-    │   ├── 10-26-11-2-MK_ Weekly-Report_ Site-Totals-and-Efficiency-Metrics.csv
-    │   ├── Recommendations_Profiles_Summary.csv
-    │   ├── searchspring_profiles_processed.csv
-    │   ├── searchspring_shopify_merged.csv
-    │   ├── Sessions over time.csv
-    │   ├── shopify_sessions_processed.csv
-    │   └── ytd_session_duration.csv
-    ├── README.md
-    ├── styles.css
-    ├── weekly_reports
-    │   └── 2025-10-27_to_11-02.html
-    ├── weekly-template.html
-    └── weekly-template.js
+└── README.md
 
-20 directories, 90 files
+25 directories, 120 files
