@@ -31,6 +31,7 @@ SCHEMAS = {
         "title": "string",
         "product_type": "string",
         "status": "string",
+        "badge": "string",
         "created_at": "datetime",
         "updated_at": "datetime",
         "published_at": "datetime",

@@ -24,9 +24,13 @@
 │   │   └── master_sku.py
 │   ├── processing.py
 │   ├── schemas.py
-│   └── searchspring
-│       ├── collections.py
-│       └── __init__.py
+│   ├── searchspring
+│   │   ├── collections.py
+│   │   └── __init__.py
+│   └── shopify
+│       ├── badges.py
+│       ├── __init__.py
+│       └── tags.py
 ├── .env
 ├── .gitignore
 ├── projects
@@ -94,7 +98,6 @@
 │   │   │   ├── master-healer_analysis.parquet
 │   │   │   ├── master-healer_products.parquet
 │   │   │   ├── master_sku.parquet
-│   │   │   ├── merchandising_report.html
 │   │   │   ├── new-arrivals_analysis.parquet
 │   │   │   ├── new-arrivals_products.parquet
 │   │   │   ├── shopify_listings.parquet
@@ -102,16 +105,14 @@
 │   │   │   ├── shopify_orders.parquet
 │   │   │   ├── shopify_variants.parquet
 │   │   │   ├── stock_daily.parquet
-│   │   │   ├── summary_by_category.csv
-│   │   │   ├── summary_by_category_group.csv
-│   │   │   ├── summary_by_category_group.parquet
-│   │   │   ├── summary_by_category.parquet
 │   │   │   ├── summary_by_markdown.csv
 │   │   │   ├── summary_by_markdown.parquet
 │   │   │   ├── summary_by_type.csv
 │   │   │   ├── summary_by_type.parquet
 │   │   │   └── variant_sales.parquet
 │   │   ├── extract.py
+│   │   ├── merchandising_report.html
+│   │   ├── run_report.py
 │   │   ├── scripts
 │   │   │   ├── build_collection_analysis.py
 │   │   │   ├── build_listing_sales.py
@@ -121,27 +122,34 @@
 │   │   └── templates
 │   │       ├── report.html
 │   │       └── styles.css
-│   └── random-reports
-│       ├── ad_hoc
-│       │   ├── 10-3-searchspring_analysis.html
-│       │   ├── abnormal_conversion_9_17_2025.html
-│       │   └── session_duration.html
-│       ├── index.html
-│       ├── input
-│       │   ├── 10-26-11-2-MK_ Weekly-Report_ Site-Totals-and-Efficiency-Metrics.csv
-│       │   ├── Recommendations_Profiles_Summary.csv
-│       │   ├── searchspring_profiles_processed.csv
-│       │   ├── searchspring_shopify_merged.csv
-│       │   ├── Sessions over time.csv
-│       │   ├── shopify_sessions_processed.csv
-│       │   └── ytd_session_duration.csv
-│       ├── README.md
-│       ├── styles.css
-│       ├── weekly_reports
-│       │   └── 2025-10-27_to_11-02.html
-│       ├── weekly-template.html
-│       └── weekly-template.js
+│   ├── random-reports
+│   │   ├── ad_hoc
+│   │   │   ├── 10-3-searchspring_analysis.html
+│   │   │   ├── abnormal_conversion_9_17_2025.html
+│   │   │   └── session_duration.html
+│   │   ├── index.html
+│   │   ├── input
+│   │   │   ├── 10-26-11-2-MK_ Weekly-Report_ Site-Totals-and-Efficiency-Metrics.csv
+│   │   │   ├── Recommendations_Profiles_Summary.csv
+│   │   │   ├── searchspring_profiles_processed.csv
+│   │   │   ├── searchspring_shopify_merged.csv
+│   │   │   ├── Sessions over time.csv
+│   │   │   ├── shopify_sessions_processed.csv
+│   │   │   └── ytd_session_duration.csv
+│   │   ├── README.md
+│   │   ├── styles.css
+│   │   ├── weekly_reports
+│   │   │   └── 2025-10-27_to_11-02.html
+│   │   ├── weekly-template.html
+│   │   └── weekly-template.js
+│   └── shopify-maintenance
+│       ├── execute
+│       │   └── update-new.py
+│       └── process
+│           ├── best-seller-check.py
+│           ├── new-check.py
+│           └── top_sellers.csv
 ├── pyproject.toml
 └── README.md
 
-25 directories, 120 files
+29 directories, 124 files
