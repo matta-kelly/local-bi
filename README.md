@@ -1,10 +1,10 @@
-# BI
+# data-ops
 
-Centralized data hub for Lotus & Luna analytics. Shared connectors, schemas, and processing — individual projects import what they need.
+Centralized data hub for Lotus & Luna analytics and automations. Shared connectors, schemas, and processing — individual projects import what they need.
 
 ## Structure
 ```
-BI/
+data-ops/
 ├── connections/          # Shared data connectors
 │   ├── processing.py     # DataFrame cleaning & type casting
 │   ├── schemas.py        # Column definitions per table
