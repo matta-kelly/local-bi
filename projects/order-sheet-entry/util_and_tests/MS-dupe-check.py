@@ -1,82 +1,70 @@
 #!/usr/bin/env python3
 """
-check_master_dupes_filtered_hic.py
+MS-dupe-check.py
 
-One‐off script to scan “input/MS-EXT-ID.csv” row by row,
-drop any rows where:
-  • FAHO25 Status == "Exclusive"
-  • Collection     == "HAREM PANTS"
-  • SKU             contains "HIC"
-Then identify duplicate (Parent SKU, Size Abbreviation) keys
-among the remaining rows, write those duplicates (five columns)
-to “output/master_dupes.csv” and print the duplicate count.
+Validate master SKU processing by checking for duplicate (Parent SKU, Size Abbreviation)
+keys after applying all filters.
+
+Uses the same processing pipeline as order-transformation.py:
+  - build_master_with_ext_id() to join master-sku + product-variant
+  - align_master_with_dupecheck() to apply filtering
+
+If duplicates remain after processing, something is wrong with our deduplication logic.
 """
 
-import csv
+import sys
 from pathlib import Path
 
+# Add parent to path for imports
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from util_and_tests import (
+    build_master_with_ext_id,
+    align_master_with_dupecheck,
+)
+
 ROOT = Path(__file__).resolve().parent.parent
-INPUT_CSV  = ROOT / "input" / "utils/MS-EXT-ID.csv"
+MASTER_SKU_FILE = ROOT / "input" / "utils" / "master-sku.csv"
+PRODUCT_VARIANT_FILE = ROOT / "input" / "utils" / "product-variant-export.csv"
 OUTPUT_DIR = ROOT / "output"
-DUPES_CSV  = OUTPUT_DIR / "master_dupes.csv"
+DUPES_CSV = OUTPUT_DIR / "master_dupes.csv"
 
-# ── STEP 1: Read header and find column indices ─────────────────────────────────
-with INPUT_CSV.open(newline="", encoding="utf-8", errors="ignore") as f:
-    reader = csv.reader(f)
-    header = next(reader)
-    header = [h.strip() for h in header]
+SIZE_ABBR_COL = "Size Abbreviation"
 
+
+def main():
+    print("Building master SKU with EXT_ID (on-demand)...")
+    master_df = build_master_with_ext_id(MASTER_SKU_FILE, PRODUCT_VARIANT_FILE)
+
+    print(f"Raw master rows: {len(master_df)}")
+
+    print("Applying filters and deduplication...")
     try:
-        idx_parent      = header.index("SKU (Parent)")
-        idx_size        = header.index("Size Abbreviation")
-        idx_sku         = header.index("SKU")
-        idx_upc         = header.index("UPC")
-        idx_ext         = header.index("EXT_ID")
-        idx_faho25      = header.index("FAHO25 Status")
-        idx_collection  = header.index("Collection")
-    except ValueError as e:
-        raise RuntimeError(f"Required column missing: {e}")
+        filtered_df = align_master_with_dupecheck(master_df, SIZE_ABBR_COL)
+        print(f"Filtered master rows: {len(filtered_df)}")
+        print("No duplicates found - processing is valid.")
+    except RuntimeError as e:
+        # align_master_with_dupecheck raises if duplicates remain
+        print(f"ERROR: {e}")
 
-# ── STEP 2: Build mapping from (parent, size) → list of rows, with filtering ────
-duplicates_map = {}  # key: (parent, size) → list of row lists
+        # Find and report the duplicates manually for debugging
+        m = master_df.copy()
+        # Apply same normalization to see what's duplicated
+        for c in ("SKU (Parent)", SIZE_ABBR_COL):
+            if c in m.columns:
+                m[c] = m[c].fillna("").astype(str).str.strip().str.upper()
 
-with INPUT_CSV.open(newline="", encoding="utf-8", errors="ignore") as f:
-    reader = csv.reader(f)
-    next(reader)  # skip header
-    for row in reader:
-        parent     = row[idx_parent].strip().upper()
-        size       = row[idx_size].strip().upper()
-        sku        = row[idx_sku].strip().upper()
-        faho25     = row[idx_faho25].strip().upper()
-        collection = row[idx_collection].strip().upper()
+        dupes = m[m.duplicated(subset=["SKU (Parent)", SIZE_ABBR_COL], keep=False)]
+        dupes = dupes.sort_values(["SKU (Parent)", SIZE_ABBR_COL])
 
-        # Skip rows marked Exclusive, in Harem Pants collection, or SKU containing "HIC"
-        if faho25 == "EXCLUSIVE" or collection == "HAREM PANTS" or "HIC" in sku:
-            continue
+        OUTPUT_DIR.mkdir(exist_ok=True)
+        output_cols = ["SKU (Parent)", SIZE_ABBR_COL, "SKU", "UPC", "EXT_ID"]
+        available_cols = [c for c in output_cols if c in dupes.columns]
+        dupes[available_cols].to_csv(DUPES_CSV, index=False)
 
-        key = (parent, size)
-        duplicates_map.setdefault(key, []).append(row)
+        print(f"Wrote {len(dupes)} duplicate rows to {DUPES_CSV}")
+        sys.exit(1)
 
-# ── STEP 3: Extract keys with >1 occurrence ─────────────────────────────────────
-duplicate_rows = []
-for key, rows in duplicates_map.items():
-    if len(rows) > 1:
-        duplicate_rows.extend(rows)
 
-total_dupes = len(duplicate_rows)
-print(f"Duplicates found: {total_dupes}")
-
-# ── STEP 4: Write duplicate rows to CSV (only five relevant columns) ───────────
-if total_dupes:
-    OUTPUT_DIR.mkdir(exist_ok=True)
-    with DUPES_CSV.open("w", newline="", encoding="utf-8") as out_f:
-        writer = csv.writer(out_f)
-        writer.writerow(["SKU (Parent)", "Size Abbreviation", "SKU", "UPC", "EXT_ID"])
-        for row in duplicate_rows:
-            writer.writerow([
-                row[idx_parent].strip(),
-                row[idx_size].strip(),
-                row[idx_sku].strip(),
-                row[idx_upc].strip(),
-                row[idx_ext].strip(),
-            ])
+if __name__ == "__main__":
+    main()

@@ -114,7 +114,8 @@ def align_master_with_dupecheck(
     Normalize and filter master data, enforcing uniqueness.
 
     Filtering rules:
-      - Drop rows where FAHO25 Status == 'EXCLUSIVE'
+      - Drop rows where any status column == 'EXCLUSIVE'
+        (Season, FAHO24 Status, SPSU25 Status, FAHO25 Status, SPSU26 Status)
       - Drop rows where Collection == 'HAREM PANTS'
       - Drop rows where SKU contains 'HIC'
       - Drop rows with bad/empty keys
@@ -135,14 +136,27 @@ def align_master_with_dupecheck(
     """
     m = master_df.copy()
 
+    # Columns to check for EXCLUSIVE status
+    exclusive_filter_cols = (
+        "Season",
+        "FAHO24 Status",
+        "SPSU25 Status",
+        "FAHO25 Status",
+        "SPSU26 Status",
+    )
+
     # Normalize key/used columns
-    for c in ("SKU (Parent)", "Size Abbreviation", "SKU", "FAHO25 Status", "Collection"):
+    normalize_cols = ("SKU (Parent)", "Size Abbreviation", "SKU", "Collection") + exclusive_filter_cols
+    for c in normalize_cols:
         if c in m.columns:
             m[c] = _nonempty(m[c]).str.upper()
 
-    # Filter rules
-    if "FAHO25 Status" in m.columns:
-        m = m[~m["FAHO25 Status"].eq("EXCLUSIVE")]
+    # Filter out EXCLUSIVE from any status/season column
+    for c in exclusive_filter_cols:
+        if c in m.columns:
+            m = m[~m[c].eq("EXCLUSIVE")]
+
+    # Other filter rules
     if "Collection" in m.columns:
         m = m[~m["Collection"].eq("HAREM PANTS")]
     if "SKU" in m.columns:

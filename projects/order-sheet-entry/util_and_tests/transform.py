@@ -96,6 +96,8 @@ def breakout_matrix(
             "qty": int(qty),
         })
 
+    if not records:
+        return pd.DataFrame(columns=["parent", "size", "qty"])
     return pd.DataFrame.from_records(records)
 
 
